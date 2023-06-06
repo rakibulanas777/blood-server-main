@@ -3,7 +3,11 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const UserSchema = new mongoose.Schema(
 	{
-		name: {
+		firstname: {
+			type: String,
+			required: [true, "Please provide your name"],
+		},
+		lastname: {
 			type: String,
 			required: [true, "Please provide your name"],
 		},
@@ -12,6 +16,15 @@ const UserSchema = new mongoose.Schema(
 			required: [true, "Please provide your email"],
 			unique: true,
 			validate: [validator.isEmail, "Please provide a valid email"],
+		},
+		phoneNumber: {
+			type: String,
+			required: [true, "Please provide your email"],
+			unique: true,
+		},
+		blood: {
+			type: String,
+			required: [true, "Please provide your blood group"],
 		},
 		image: String,
 		password: {
@@ -35,6 +48,10 @@ const UserSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 			select: false,
+		},
+		isAvailable: {
+			type: Boolean,
+			default: true,
 		},
 	},
 	{ timestamps: true }

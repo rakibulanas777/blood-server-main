@@ -10,18 +10,13 @@ const register = catchAsync(async (req, res, next) => {
 	// const hash = bcrypt.hashSync(req.body.password, salt);
 	// const hashConfrim = bcrypt.hashSync(req.body.passwordConfrim, salt);
 
-	const newUser = new User(
-		req.body
-		// password: hash,
-		// passwordConfrim: hashConfrim,
-	);
-	const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-		expiresIn: "5h",
-	});
+	const newUser = new User(req.body);
+	console.log(newUser);
 	await newUser.save();
+	console.log(newUser);
 	res.status(200).json({
 		status: "sucess",
-		token,
+
 		data: {
 			user: newUser,
 		},
@@ -32,10 +27,15 @@ const register = catchAsync(async (req, res, next) => {
 
 const getUsers = catchAsync(async (req, res, next) => {
 	const users = await User.find();
-	if (req.query.email) {
-		const search = req.query.email;
-		const matched = users.filter((user) => user.email.includes(search));
+	console.log(users);
+	if (req.query.blood) {
+		const search = req.query.blood.toLowerCase();
+		const matched = users.filter((User) =>
+			User.blood.toLowerCase().includes(search)
+		);
+		console.log(matched);
 		res.status(200).json(matched);
+		next();
 	} else {
 		res.status(200).json(users);
 	}
@@ -55,12 +55,10 @@ const login = catchAsync(async (req, res, next) => {
 	if (!user || !(await user.correctPassword(password, user.password))) {
 		return next(new AppError("Incorrect email or password", 401));
 	}
-	const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-		expiresIn: "5h",
-	});
+
 	res.status(200).json({
 		status: "sucess",
-		token,
+
 		data: {
 			user,
 		},

@@ -7,7 +7,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const app = express();
 dotenv.config();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8008;
 app.use(cors());
 app.get("/", (req, res) => {
 	res.send("Hello world ");
